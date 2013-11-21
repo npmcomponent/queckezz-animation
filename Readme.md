@@ -14,13 +14,15 @@
 ### <a href="#api-events">Events</a>
 
 * <a href="#api-events-start"><code>animation(start, cb)</code></a>
-* <a href="#api-events-iteration"><code>>animation(iteration, cb)</code></a>
-* <a href="#api-events-end"><code>>animation(end, cb)</code></a>
+* <a href="#api-events-iteration"><code>animation(iteration, cb)</code></a>
+* <a href="#api-events-end"><code>animation(end, cb)</code></a>
 
 ------------------------------------------------
 <a name="api-ctor"></a>
 ### new Animation(class, ...elements)
-Creates a new Animation() that appends `class` to the given `elements`. Returns a <a href="#api-animation"><code>animation()</code></a>
+Creates a new Animation() that appends `class` to the given `elements`.
+
+Returns:
 
 <a name="api-animation"></a>
 ### animation()
