@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Animation</title>
+    <script src='build/build.js'></script>
+    <style>
+      @-webkit-keyframes flash {
+        50% { opacity: 0; }
+      }
+
+      @keyframes flash {
+        50% { opacity: 0; }
+      }
+
+      .flash {
+        -webkit-animation: flash 1s ease 3;
+        animation: flash 1s ease 3;
+      }
+
+      .box {
+        width: 500px;
+        height: 500px;
+        background-color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='box'>
+      <p>Animation component.</p>
+    </div>
+    <div class='box'>
+      <p>.</p>
+    </div>
+    <script>
+      var Animation = require('animation');
+      var boxes = document.getElementsByClassName('box')
+      var el = boxes[0]
+      var el2 = boxes[1]
+
+      // creates a new animation.
+      var flash = new Animation('flash', el, el2)
+
+      // listen on start, iteration and end events.
+
+      flash('start', function(e) {
+        console.log('start', e);
+      })
+
+      flash('iteration', function(e) {
+        console.log('iteration', e);
+      })
+
+      flash('end', function(e) {
+        console.log('end', e);
+      })
+
+      // start the animation.
+      flash()
+
+      /**
+       * Log.
+       *
+       * start Object {name: "flash", type: "webkitAnimationStart", time: 0} example.html:47
+       * iteration Object {name: "flash", type: "webkitAnimationIteration", time: 1} example.html:51
+       * iteration Object {name: "flash", type: "webkitAnimationIteration", time: 2} example.html:51
+       * end Object {name: "flash", type: "webkitAnimationEnd", time: 3} example.html:55
+       */
+    </script>
+  </body>

@@ -1,0 +1,15 @@
+{
+  "name": "animation",
+  "version": "0.0.1",
+  "description": "Simple css3 animation utility which provides hooks for start, iteration and end events.",
+  "dependencies": {
+    "queckezz/vendor": "*",
+    "aheckmann/sliced": "*"
+  },
+  "development": {},
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ],
+  "remotes": []
+}
