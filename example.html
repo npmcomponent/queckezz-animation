@@ -22,6 +22,7 @@
         width: 500px;
         height: 500px;
         background-color: #333;
+        display: inline-block;
       }
     </style>
   </head>
@@ -42,7 +43,6 @@
       var flash = new Animation('flash', el, el2)
 
       // listen on start, iteration and end events.
-
       flash('start', function(e) {
         console.log('start', e);
       })

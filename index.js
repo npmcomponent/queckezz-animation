@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
- 
+
 var vendor = require('vendor')
 var slice = require('sliced')
 
@@ -51,18 +51,41 @@ function Animation(animation) {
  */
 
 Animation.prototype.listen = function (event, cb) {
+  var self = this
   var els = this.els
   var el = els[0]
-  var animation = this.animation
+  var type = prefix(event)
 
-  listen(el, event, function(e) {
-    if (event !== 'end') return cb(e);
+  el.addEventListener(type, function listener (params) {
+    params = {
+      name: params.animationName,
+      type: params.type,
+      time: params.elapsedTime
+    }
+
+    switch (event) {
+      case 'start':
+        this.removeEventListener(type, listener)
+        break
+
+      case 'iteration':
+        //TODO: ugly, refactor maybe
+        self.iterationListener = listener
+        break
+
+      case 'end':
+        this.removeEventListener(type, listener)
+        this.removeEventListener(prefix('iteration'), self.iterationListener)
+        break
+    }
+
+    if (event !== 'end') return cb(params);
 
     els.forEach(function(el) {
-      el.classList.remove(animation)
+      el.classList.remove(self.animation)
     })
 
-    cb(e)
+    cb(params)
   })
 }
 
@@ -76,25 +99,23 @@ Animation.prototype.animate = function () {
   var els = this.els
   var animation = this.animation
 
- setTimeout(function() {
-   els.forEach(function(el) {
+  setTimeout(function () {
+    els.forEach(function(el) {
       el.classList.add(animation)
-   })    
- }, 0) 
+    })    
+  }, 0) 
 }
 
 /**
- * Listen to an Event cross-browser.
+ * Returns the prefixed event.
  *
- * @param {DOMElement} el
  * @param {String} type
- * @param {Function} callback
  *
  * @api private
  */
 
-function listen (el, type, callback) {
-  type = 'Animation' + capitalize(type)
+function prefix(type) {
+  type = 'Animation' + type[0].toUpperCase() + type.slice(1)
 
   switch (browser) {
     case 'webkit':
@@ -110,23 +131,5 @@ function listen (el, type, callback) {
       break
   }
 
-  el.addEventListener(type, function(e) {
-    callback({
-      name: e.animationName,
-      type: e.type,
-      time: e.elapsedTime
-    })
-  })
-}
-
-/**
- * Capitalize the first letter of a string.
- *
- * @param {String} str
- *
- * @api private
- */
-
-function capitalize(str) {
-  return str[0].toUpperCase() + str.slice(1)
+  return type
 }
