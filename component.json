@@ -4,9 +4,12 @@
   "description": "Simple css3 animation utility which provides hooks for start, iteration and end events.",
   "dependencies": {
     "queckezz/vendor": "*",
-    "aheckmann/sliced": "*"
+    "aheckmann/sliced": "*",
+    "ianstormtaylor/is": "*"
   },
-  "development": {},
+  "development": {
+    "visionmedia/batch": "*"
+  },
   "main": "index.js",
   "scripts": [
     "index.js"

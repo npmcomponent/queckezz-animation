@@ -1,10 +1,55 @@
 # animation
 
-  Simple css3 animation utility which provides hooks for start, iteration and end events.
+  Simple css3 animation utility which provides hooks for start, iteration and end events. You can chain animations.
 
 ## Installation
 
     $ component install queckezz/animation
+
+## Examples
+
+### Basic
+
+```js
+var Animation = require('animation')
+var el = document.getElementsByClassName('box')[0];
+
+// create a new Animation
+var flash = new Animation('flash', el);
+
+flash('end', function(e) {
+  console.log(e.name, e.type, e.time);
+  console.log('animation ended.');
+})
+
+// start the animation
+flash()
+```
+
+### Chaining
+
+  You can chain animations together with [batch](https://github.com/visionmedia/batch).
+
+```js
+var Animation = require('animation')
+var Batch = require('batch')
+
+var boxes = document.getElementsByClassName('box')
+var flash = new Animation('flash', boxes[1])
+var rotate = new Animation('rotate', boxes[0])
+var flash2 = new Animation('flash', boxes[1])
+var sequence = new Batch;
+
+sequence.concurrency(1)
+
+sequence
+  .push(rotate)
+  .push(flash2)
+  .push(rotate)
+  .push(flash)
+```
+
+For complete examples take a look the examples folder.
 
 ## API
 
@@ -49,36 +94,6 @@ Executes `callback` when an animation cycle is done.
 <a name="api-events-end"></a>
 ### animation('start', callback)
 Executes `callback` when the animation has ended. Also removes `animation`s classes.
-
-## Example
-
-```js
-var Animation = require('animation');
-var el = document.getElementsByClassName('box')[0];
-
-// create a new Animation
-var flash = new Animation('flash', el);
-
-flash('end', function(e) {
-  console.log(e.name, e.type, e.time);
-  console.log('animation ended.');
-})
-
-// start the animation
-flash()
-```
-
-```css
-@keyframes flash {
-  50% { opacity: 0; }
-}
-
-.flash {
-  animation: flash 1s ease 3;
-}
-```
-
-For a complete example take a look at `example.html`.
 
 ## License
 

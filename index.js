@@ -5,6 +5,7 @@
 
 var vendor = require('vendor')
 var slice = require('sliced')
+var is = require('is')
 
 /**
  * Expose `Animation`.
@@ -33,16 +34,95 @@ function Animation(animation) {
 
   this.els = els
   this.animation = animation
+  this.callbacks = {}
+
+  this.register('end')
 
   return function(event, cb) {
-    if (event && cb) return self.listen(event, cb);
+    if (event && !is.fn(event)) return self.register(event, cb)
+
+    var done = event || noop
+
+    self.listen(done)
     self.animate()
   }
 }
 
 /**
- * Listen on `event` and execute callback when fired.
- * Additionally, on the `end` event it will remove the animation class when fired.
+ * Listen on all events that have a registered callback.
+ *
+ * @api private
+ */
+
+Animation.prototype.listen = function (done) {
+  var self = this
+  var els = this.els
+  var el = els[0]  
+  var events = Object.keys(this.callbacks)
+
+  events.forEach(function(event) {
+    el.addEventListener(prefix(event), function listener (params) {
+      params = {
+        name: params.animationName,
+        type: params.type,
+        time: params.elapsedTime
+      }
+
+      var cb = self.callbacks[event]
+
+      cb(params)
+      self[event](el, event, listener)
+
+      done()
+    })
+  })
+}
+
+/**
+ * Hook for `start` event after custom hook is done.
+ *
+ * @param {DOMElement} el
+ * @param {String} event
+ * @param {Function} fn
+ */
+
+Animation.prototype.start = function (el, event, fn) {
+  el.removeEventListener(prefix(event), fn)
+}
+
+/**
+ * Hook for `iteration` event after custom hook is done.
+ *
+ * @param {DOMElement} el
+ * @param {String} event
+ * @param {Function} fn
+ */
+
+Animation.prototype.iteration = function (el, event, fn) {
+  this.iterationListener = fn
+}
+
+/**
+ * Hook for `end` event after custom hook is done.
+ *
+ * @param {DOMElement} el
+ * @param {String} event
+ * @param {Function} fn
+ */
+
+Animation.prototype.end = function (el, event, fn) {
+  var self = this
+
+  el.removeEventListener(prefix(event), fn)
+  el.removeEventListener(prefix('iteration'), this.iterationListener)
+
+  this.els.forEach(function(el) {
+    el.classList.remove(self.animation)
+  })
+}
+
+/**
+ * Register an `event` with a given `callback`.
  *
  * @param {String} event
  * @param {Function} cb
@@ -50,44 +130,10 @@ function Animation(animation) {
  * @api private
  */
 
-Animation.prototype.listen = function (event, cb) {
-  var self = this
-  var els = this.els
-  var el = els[0]
-  var type = prefix(event)
-
-  el.addEventListener(type, function listener (params) {
-    params = {
-      name: params.animationName,
-      type: params.type,
-      time: params.elapsedTime
-    }
-
-    switch (event) {
-      case 'start':
-        this.removeEventListener(type, listener)
-        break
-
-      case 'iteration':
-        //TODO: ugly, refactor maybe
-        self.iterationListener = listener
-        break
-
-      case 'end':
-        this.removeEventListener(type, listener)
-        this.removeEventListener(prefix('iteration'), self.iterationListener)
-        break
-    }
-
-    if (event !== 'end') return cb(params);
-
-    els.forEach(function(el) {
-      el.classList.remove(self.animation)
-    })
-
-    cb(params)
-  })
-}
+Animation.prototype.register = function (event, cb) {
+  if (!cb) cb = noop;
+  this.callbacks[event] = cb
+};
 
 /**
  * Add the `animation`s class for each of the `els`
@@ -133,3 +179,11 @@ function prefix(type) {
 
   return type
 }
+
+/**
+ * Noop function.
+ *
+ * @api private
+ */
+
+function noop () {}

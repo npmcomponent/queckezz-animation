@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>Animation demo - Chain</title>
+    <script src='../build/build.js'></script>
+    <style>
+      @-webkit-keyframes rotate { 
+        100% { 
+          -webkit-transform: rotate(360deg);
+        }
+      }
+
+      @keyframes rotate { 
+        100% { 
+          transform: rotate(360deg);
+        }
+      }
+
+      @-webkit-keyframes flash {
+        50% { opacity: 0; }
+      }
+
+      @keyframes flash {
+        50% { opacity: 0; }
+      }
+
+      .flash {
+        -webkit-animation: flash 1s ease 3;
+        animation: flash 1s ease 3;
+      }
+
+      .rotate {
+        -webkit-animation:rotate 1s linear;
+        animation: rotate 1s linear;
+      }
+
+      .box {
+        width: 500px;
+        height: 500px;
+        background-color: #333;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='box'></div>
+    <div class='box'></div>
+    <script>
+      var Animation = require('animation')
+      var Batch = require('batch')
+
+      var boxes = document.getElementsByClassName('box')
+      var flash = new Animation('flash', boxes[1])
+      var rotate = new Animation('rotate', boxes[0])
+      var flash2 = new Animation('flash', boxes[1])
+      var sequence = new Batch;
+
+      sequence.concurrency(1)
+
+      sequence
+        .push(rotate)
+        .push(flash2)
+        .push(rotate)
+        .push(flash)
+
+      sequence.end(function(data) {
+        console.log('end', data)
+      })
+
+    </script>
+  </body>

@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset='utf-8'>
-    <title>Animation</title>
-    <script src='build/build.js'></script>
+    <title>Animation demo - Simple</title>
+    <script src='../build/build.js'></script>
     <style>
       @-webkit-keyframes flash {
         50% { opacity: 0; }
@@ -27,22 +27,14 @@
     </style>
   </head>
   <body>
-    <div class='box'>
-      <p>Animation component.</p>
-    </div>
-    <div class='box'>
-      <p>.</p>
-    </div>
+    <div class='box'></div>
+    <div class='box'></div>
     <script>
       var Animation = require('animation');
+      
       var boxes = document.getElementsByClassName('box')
-      var el = boxes[0]
-      var el2 = boxes[1]
-
-      // creates a new animation.
-      var flash = new Animation('flash', el, el2)
-
-      // listen on start, iteration and end events.
+      var flash = new Animation('flash', boxes[0], boxes[1])
+      
       flash('start', function(e) {
         console.log('start', e);
       })
@@ -55,7 +47,6 @@
         console.log('end', e);
       })
 
-      // start the animation.
       flash()
 
       /**
