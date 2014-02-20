@@ -3,9 +3,9 @@
  * Module dependencies.
  */
 
-var vendor = require('vendor')
-var slice = require('sliced')
-var is = require('is')
+var vendor = require('queckezz-vendor')
+var slice = require('aheckmann-sliced')
+var is = require('ianstormtaylor-is')
 
 /**
  * Expose `Animation`.

@@ -1,3 +1,4 @@
+*This repository is a mirror of the [component](http://component.io) module [queckezz/animation](http://github.com/queckezz/animation). It has been modified to work with NPM+Browserify. You can install it using the command `npm install npmcomponent/queckezz-animation`. Please do not open issues or send pull requests against this repo. If you have issues with this repo, report it to [npmcomponent](https://github.com/airportyh/npmcomponent).*
 # animation
 
   Simple css3 animation utility which provides hooks for start, iteration and end events. You can chain animations.

@@ -1,0 +1,11 @@
+{
+  "name": "queckezz-animation",
+  "description": "Simple css3 animation utility which provides hooks for start, iteration and end events.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "queckezz-vendor": "git://github.com/npmcomponent/queckezz-vendor.git",
+    "aheckmann-sliced": "git://github.com/npmcomponent/aheckmann-sliced.git",
+    "ianstormtaylor-is": "git://github.com/npmcomponent/ianstormtaylor-is.git"
+  }
+}
